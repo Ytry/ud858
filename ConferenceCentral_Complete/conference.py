@@ -327,6 +327,27 @@ class ConferenceApi(remote.Service):
                 conferences]
         )
 
+        def copySessionToForm(self, session):
+        """Copy relevant fields from Session to SessionForm."""
+        sf = SessionForm()
+        for field in sf.all_fields():
+            if hasattr(session, field.name):
+                # convert Date to date string; just copy others
+                if field.name == "date":
+                    setattr(sf, field.name, str(getattr(session, field.name)))
+                else:
+                    setattr(sf, field.name, getattr(session, field.name))
+            elif field.name == "confwebsafeKey":
+                setattr(sf, field.name, session.confwebsafeKey.urlsafe())
+            elif field.name == "name":
+                setattr(sf, field.name, session.name)
+                # convery startTime to time string
+            elif field.name == "startTime":
+                setattr(sf, field.name, str(getattr(session, field.name)))
+        sf.check_initialized()
+        return sf
+
+
 
 # - - - Profile objects - - - - - - - - - - - - - - - - - - -
 

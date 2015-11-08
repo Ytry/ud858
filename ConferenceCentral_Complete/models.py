@@ -130,5 +130,8 @@ class SessionForm(messages.Message):
     date = messages.StringField(7)  # date property
     statTime = messages.StringField(8)  # time property
 
+class SessionForms(messages.Message):
+    """ConferenceForms -- multiple Conference outbound form message"""
+    items = messages.MessageField(SessionForm, 1, repeated=True)
     
 

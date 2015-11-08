@@ -118,3 +118,14 @@ class Session(ndb.Model):
     date = ndb.DateProperty()
     startTime = ndb.TimeProperty()
 
+class SessionForm(messages.Message):
+    """SessionForm -- Session outbound form message"""
+    name = messages.StringField(1)
+    highlights = messages.StringField(2)
+    speaker = messages.StringField(3)
+    duration = messages.StringField(4)  # time property
+    typeOfSession = messages.StringField(5)
+    date = messages.StringField(6)  # date property
+    statTime = messages.StringField(7)  # time property
+    
+

@@ -353,7 +353,7 @@ class ConferenceApi(remote.Service):
 
 # - - - Session objects - - - - - - - - - - - - - - - - - - -
 
-    @endpoints.method(CONF_GET_REQUEST, SessionForm,
+    @endpoints.method(CONF_GET_REQUEST, SessionForms,
                       path='getConferenceSessions/{websafeConferenceKey}',
                       http_method='GET',
                       name='getConferenceSessions')

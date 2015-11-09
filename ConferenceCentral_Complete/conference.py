@@ -369,9 +369,7 @@ class ConferenceApi(remote.Service):
         sessions = Session.query(ancestor=confwebsafeKey).fetch()
 
 
-        return SessionForm([self.copySessionToForm(session)
-                            for session in sessions]
-                           )
+        return SessionForms([items=self.copySessionToForm(sessions)])
 
         def copySessionToForm(self, session):
         """Copy relevant fields from Session to SessionForm."""

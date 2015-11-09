@@ -463,6 +463,21 @@ class ConferenceApi(remote.Service):
 
         return SessionForms([items=self.copySessionToForm(sessions)])
 
+    @endpoints.method(SESSION_GET_SPEAKER_REQUEST, SessionForms,
+                      path='getSessionsBySpeaker',
+                      http_method='GET',
+                      name='getConferenceSessionBySpeaker')
+    def getSessionsBySpeaker(self, request):
+        """Return a list of sessions containing the requested speaker."""
+        sessions = Session.query(Session.speaker == request.speaker).fetch()
+
+        return SessionForms([items=self.copySessionToForm(sessions)])
+
+    
+
+
+
+
 # - - - Profile objects - - - - - - - - - - - - - - - - - - -
 
     def _copyProfileToForm(self, prof):

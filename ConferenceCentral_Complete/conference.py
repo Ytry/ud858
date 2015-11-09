@@ -391,6 +391,50 @@ class ConferenceApi(remote.Service):
         sf.check_initialized()
         return sf
 
+    def createSessionObject(self, request):
+        """Create or update Session object, returning SessionForm/request."""
+        # preload necessary data items
+
+        # Check if user is auth'd
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+        user_id = getUserId(user)
+
+        # Check if created session has the required property 'name'
+        if not request.name:
+            raise endpoints.BadRequestException(
+                "Session 'name' field required")
+
+        # copy SessionForm/ProtoRPC Message into dict
+        data = {field.name: getattr(
+            request, field.name) for field in request.all_fields()}
+
+        # add default values for those missing
+        # (both data model & outbound Message)
+        for df in DEFAULT_SESSION:
+            if data[df] in (None, []):
+                data[df] = DEFAULT_SESSION[df]
+                setattr(request, df, DEFAULT_SESSION[df])
+
+        # convert dates and times from strings to Date/Time objects respectively
+        if data['date']:
+            data['date'] = datetime.strptime(
+                data['date'][:10], "%Y-%m-%d").date()
+        # convert time strings to time objects
+        if data['duration']:
+            data['duration'] = datetime.strptime(
+                data['duration'][0:6], "%H:%M").time()
+        if data['startTime']:
+            data['startTime'] = datetime.strptime(
+                data['startTime'][0:6], "%H:%M").time()
+
+        # set creatorID to the current user
+        data['creatorID'] = request.creatorID = user_id
+
+        # create Session and return (modified) SessionForm
+        Session(**data).put()
+        return request
 
 
 # - - - Profile objects - - - - - - - - - - - - - - - - - - -

@@ -129,7 +129,7 @@ class SessionForm(messages.Message):
     duration = messages.StringField(5)  # time property
     typeOfSession = messages.StringField(6)
     date = messages.StringField(7)  # date property
-    statTime = messages.StringField(8)  # time property
+    startTime = messages.StringField(8)  # time property
     creatorID = messages.StringField(9)
 
 class SessionForms(messages.Message):

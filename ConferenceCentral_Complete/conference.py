@@ -436,6 +436,14 @@ class ConferenceApi(remote.Service):
         Session(**data).put()
         return request
 
+    @endpoints.method(SessionForm, SessionForm,
+                      path='createSession',
+                      http_method='POST',
+                      name='createSession')
+    def createSession(self, request):
+        """Create new Session."""
+        return self.createSessionObject(request)
+
 
 # - - - Profile objects - - - - - - - - - - - - - - - - - - -
 

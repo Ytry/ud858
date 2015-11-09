@@ -62,7 +62,6 @@ DEFAULTS = {
 DEFAULT_SESSION = {
     "highlights": "Default Highlights",
     "speaker": "Default Speaker",
-    "duration": 0,
     "typeOfSession": "Default typeOfSession",
 
 }

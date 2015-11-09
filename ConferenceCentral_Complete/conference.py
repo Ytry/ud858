@@ -371,7 +371,7 @@ class ConferenceApi(remote.Service):
 
         return SessionForms(items=[self.copySessionToForm(sessions)])
 
-        def copySessionToForm(self, session):
+    def copySessionToForm(self, session):
         """Copy relevant fields from Session to SessionForm."""
         sf = SessionForm()
         for field in sf.all_fields():

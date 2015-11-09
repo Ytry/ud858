@@ -61,6 +61,16 @@ DEFAULTS = {
     "topics": [ "Default", "Topic" ],
 }
 
+DEFAULT_SESSION = {
+    "highlights": "Default Highlights",
+    "speaker": "Default Speaker",
+    "duration": "Default Duration",
+    "date": "Default Date",
+    "startTime": "Default startTime",
+    "typeOfSession": "Default typeOfSession",
+
+}
+
 OPERATORS = {
             'EQ':   '=',
             'GT':   '>',

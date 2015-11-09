@@ -444,6 +444,24 @@ class ConferenceApi(remote.Service):
         """Create new Session."""
         return self.createSessionObject(request)
 
+    @endpoints.method(SESSION_GET_TYPE_REQUEST, SessionForms,
+                      path='getConferenceSessionsByType',
+                      http_method='GET',
+                      name='getConferenceSessionByType')
+    def getConferenceSessionsByType(self, request):
+        """Return a list of sessions of a specified type in a conference."""
+        confwebsafeKey = ndb.Key(urlsafe=request.websafeConferenceKey).get()
+        if not confwebsafeKey:
+            raise endpoints.NotFoundException(
+                'No conference found with key: %s'(
+                    % request.websafeConferenceKey))
+
+        sessions = Session.query(ancestor=confwebsafeKey).fetch()
+
+        sessions = sessions.filter(
+            SessionForm.typeOfSession == request.typeOfSession)
+
+        return SessionForms([items=self.copySessionToForm(sessions)])
 
 # - - - Profile objects - - - - - - - - - - - - - - - - - - -
 

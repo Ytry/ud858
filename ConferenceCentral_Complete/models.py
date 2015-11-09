@@ -114,7 +114,7 @@ class Session(ndb.Model):
     highlights = ndb.StringProperty()
     speaker = ndb.StringProperty()
     duration = ndb.TimeProperty()
-    typeOfSession = ndb.StringProperty(repeated=True)
+    typeOfSession = ndb.StringProperty()
     date = ndb.DateProperty()
     startTime = ndb.TimeProperty()
     confwebsafeKey = ndb.StringProperty()

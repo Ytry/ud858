@@ -381,7 +381,9 @@ class ConferenceApi(remote.Service):
 
         sessions = Session.query(ancestor=confwebsafeKey).fetch()
 
-        return SessionForms(items=[self.copySessionToForm(sessions)])
+        return SessionForms(items=[self.copySessionToForm(session)
+                                   for session in sessions]
+                            )
 
     def copySessionToForm(self, session):
         """Copy relevant fields from Session to SessionForm."""
@@ -474,7 +476,9 @@ class ConferenceApi(remote.Service):
         sessions = sessions.filter(
             SessionForm.typeOfSession == request.typeOfSession)
 
-        return SessionForms(items=[self.copySessionToForm(sessions)])
+        return SessionForms(items=[self.copySessionToForm(session)
+                                   for session in sessions]
+                            )
 
     @endpoints.method(SESSION_GET_SPEAKER_REQUEST, SessionForms,
                       path='getSessionsBySpeaker',
@@ -484,7 +488,9 @@ class ConferenceApi(remote.Service):
         """Return a list of sessions containing the requested speaker."""
         sessions = Session.query(Session.speaker == request.speaker).fetch()
 
-        return SessionForms(items=[self.copySessionToForm(sessions)])
+        return SessionForms(items=[self.copySessionToForm(session)
+                                   for session in sessions]
+                            )
 
 
 # - - - Profile objects - - - - - - - - - - - - - - - - - - -

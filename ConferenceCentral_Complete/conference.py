@@ -473,10 +473,6 @@ class ConferenceApi(remote.Service):
 
         return SessionForms([items=self.copySessionToForm(sessions)])
 
-    
-
-
-
 
 # - - - Profile objects - - - - - - - - - - - - - - - - - - -
 

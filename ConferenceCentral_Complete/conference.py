@@ -120,6 +120,11 @@ SESSION_GET_TOPIC_REQUEST = endpoints.ResourceContainer(
     topic=messages.StringField(1),
 )
 
+SESSION_POST_REQUEST = endpoints.ResourceContainer(
+    SessionForm,
+    websafeConferenceKey=messages.StringField(1),
+)
+
 CONF_POST_REQUEST = endpoints.ResourceContainer(
     ConferenceForm,
     websafeConferenceKey=messages.StringField(1),

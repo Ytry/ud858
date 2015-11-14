@@ -135,12 +135,11 @@ class Session(Conference):
     typeOfSession = ndb.StringProperty(required=True)
     date = ndb.DateProperty()
     startTime = ndb.TimeProperty()
-    confwebsafeKey = ndb.StringProperty()
-    creatorID = ndb.StringProperty()
+    organizerUserId = ndb.StringProperty()
+    websafeKey = ndb.StringProperty()
 
 class SessionForm(messages.Message):
     """SessionForm -- Session outbound form message"""
-    confwebsafeKey = messages.StringField(1)
     name = messages.StringField(2)
     highlights = messages.StringField(3)
     speaker = messages.StringField(4)
@@ -148,7 +147,8 @@ class SessionForm(messages.Message):
     typeOfSession = messages.StringField(6)
     date = messages.StringField(7)  # date property
     startTime = messages.StringField(8)  # time property
-    creatorID = messages.StringField(9)
+    websafeKey = messages.StringField(8)
+    organizerUserId = messages.StringField(9)
 
 
 class SessionForms(messages.Message):

@@ -48,6 +48,7 @@ __author__ = 'wesc+api@google.com (Wesley Chun)'
 EMAIL_SCOPE = endpoints.EMAIL_SCOPE
 API_EXPLORER_CLIENT_ID = endpoints.API_EXPLORER_CLIENT_ID
 MEMCACHE_ANNOUNCEMENTS_KEY = "RECENT_ANNOUNCEMENTS"
+MEMCACHE_FEATURED_SPEAKER_KEY = "FEATURED_SPEAKER"
 ANNOUNCEMENT_TPL = ('Last chance to attend! The following conferences '
                     'are nearly sold out: %s')
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -470,6 +471,16 @@ class ConferenceApi(remote.Service):
         websafeSessionKey = s_key.urlsafe()
         data['websafeKey'] = websafeSessionKey
 
+        speaker_name = data['speaker']
+
+        # get sessions a speaker is in, if more than 1 set as featured speaker
+        s_sessions = Session.query(Session.speaker == speaker_name).fetch()
+        if len(s_sessions) > 1:
+            session_list = [str(session.name) for session in s_sessions]
+            # add speaker to taskqueue
+            taskqueue.add(params={'speaker_name': speaker_name,
+                                  'session_list': [session_list]},
+                          url='/tasks/set_featured_speaker')
 
         # create Session and return (modified) SessionForm
         Session(**data).put()

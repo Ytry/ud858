@@ -95,6 +95,11 @@ SESSION_GET_TYPE_REQUEST = endpoints.ResourceContainer(
     typeOfSession=messages.StringField(2),
 )
 
+SESSION_POST_REQUEST = endpoints.ResourceContainer(
+    ProfileForm,
+    sessionKey=messages.StringField(1),
+)
+
 SESSION_GET_SPEAKER_REQUEST = endpoints.ResourceContainer(
     message_types.VoidMessage,
     speaker=messages.StringField(1),

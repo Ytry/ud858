@@ -603,6 +603,25 @@ class ConferenceApi(remote.Service):
         prof.put()
         return self._copyProfileToForm(prof)
 
+    @endpoints.method(message_types.VoidMessage, SessionForms,
+                      path='getSessionsInWhitelist',
+                      http_method='GET',
+                      name='getSessionsInWhitelist')
+    def getSessionsInWishlist(self, request):
+        """Return sessionforms for all sessions in a users whitelist."""
+        # make sure user is authed and get their profile
+        prof = self._getProfileFromUser()
+
+        # fetch list of web safe session keys from profile
+        ses_keys = [ndb.Key(
+            urlsafe=wssk) for wssk in prof.sessionKeysToAttend]
+
+        sessions = ndb.get_multi(ses_keys)
+
+        return SessionForms(items=[self.copySessionToForm(session)
+                                   for session in sessions]
+                            )
+
 # - - - Featured Speaker - - - - - - - - - - - - - - - - - -
 
     @staticmethod

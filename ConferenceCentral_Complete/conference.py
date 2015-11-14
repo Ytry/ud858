@@ -529,10 +529,10 @@ class ConferenceApi(remote.Service):
                 'No conference found with key: %s'
                 % request.websafeConferenceKey)
 
-        sessions = Session.query(ancestor=confwebsafeKey).fetch()
+        sessions = Session.query(ancestor=confwebsafeKey.key)
 
         sessions = sessions.filter(
-            SessionForm.typeOfSession == request.typeOfSession)
+            Session.typeOfSession == request.typeOfSession).fetch()
 
         return SessionForms(items=[self.copySessionToForm(session)
                                    for session in sessions]

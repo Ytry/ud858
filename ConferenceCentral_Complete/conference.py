@@ -574,6 +574,17 @@ class ConferenceApi(remote.Service):
                                    for session in sessions]
                             )
 
+# - - - Featured Speaker - - - - - - - - - - - - - - - - - -
+
+    @staticmethod
+    def cacheFeaturedSpeaker(speaker_name, session_list):
+        """Set featured speaker to memchache"""
+        cache = {}
+        cache['speaker'] = speaker_name
+        cache['session_list'] = session_list
+
+        return cache
+
 
 # - - - Profile objects - - - - - - - - - - - - - - - - - - -
 

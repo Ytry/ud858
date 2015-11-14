@@ -61,9 +61,11 @@ DEFAULTS = {
 
 DEFAULT_SESSION = {
     "highlights": "Default Highlights",
-    "speaker": "Default Speaker",
     "typeOfSession": "Default typeOfSession",
-
+    "name": "Default name",
+    "speaker": "Default Speaker",
+    "topic": "Default Topic",
+    "city": "Default City",
 }
 
 OPERATORS = {

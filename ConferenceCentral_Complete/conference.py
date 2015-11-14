@@ -574,6 +574,35 @@ class ConferenceApi(remote.Service):
                                    for session in sessions]
                             )
 
+# - - - User Session Whitelist - - - - - - - - - - - - - - -
+
+    @endpoints.method(SESSION_GET_REQUEST, ProfileForm,
+                      path='addSessionToWhitelist',
+                      http_method='GET',
+                      name='addSessionToWhitelist')
+    def addSessionWhitelist(self, request):
+        """Add a session to a users whitelist,
+        and return their updated profile form
+        """
+        prof = self._getProfileFromUser()
+
+        # check if session exists given websafeSessionKey
+        # get session; check that it exists
+        wssk = request.websafeSessionKey
+        sess = ndb.Key(urlsafe=wssk).get()
+        if not sess:
+            raise endpoints.NotFoundException(
+                'No Session found with key: %s' % wssk)
+
+        # check if user already registered otherwise add
+        if wssk in prof.sessionKeysToAttend:
+            raise ConflictException(
+                "Session already in whitelist")
+
+        prof.sessionKeysToAttend.append(wssk)
+        prof.put()
+        return self._copyProfileToForm(prof)
+
 # - - - Featured Speaker - - - - - - - - - - - - - - - - - -
 
     @staticmethod

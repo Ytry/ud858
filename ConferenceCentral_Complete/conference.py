@@ -399,8 +399,10 @@ class ConferenceApi(remote.Service):
                     setattr(sf, field.name, str(getattr(session, field.name)))
                 else:
                     setattr(sf, field.name, getattr(session, field.name))
-            elif field.name == "confwebsafeKey":
-                setattr(sf, field.name, session.confwebsafeKey.urlsafe())
+            elif field.name == "speaker":
+                setattr(sf, field.name, speaker.name)
+            elif field.name == "websafeKey":
+                setattr(sf, field.name, session.key.urlsafe())
             elif field.name == "name":
                 setattr(sf, field.name, session.name)
                 # convery startTime to time string
@@ -412,12 +414,19 @@ class ConferenceApi(remote.Service):
     def createSessionObject(self, request):
         """Create or update Session object, returning SessionForm/request."""
         # preload necessary data items
+        conf = ndb.Key(urlsafe=request.websafeConferenceKey).get()
 
         # Check if user is auth'd
         user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
         user_id = getUserId(user)
+
+        # Check if organizer is the same for the session and conference
+        if user_id != conf.organizerUserId:
+            raise endpoints.BadRequestException(
+                "Session oraganizer should be the same as conference organizer"
+                                                )
 
         # Check if created session has the required property 'name'
         if not request.name:
@@ -427,6 +436,8 @@ class ConferenceApi(remote.Service):
         # copy SessionForm/ProtoRPC Message into dict
         data = {field.name: getattr(
             request, field.name) for field in request.all_fields()}
+        del data['websafeKey']
+        del data['websafeConferenceKey']
 
         # add default values for those missing
         # (both data model & outbound Message)
@@ -448,12 +459,22 @@ class ConferenceApi(remote.Service):
             data['startTime'] = datetime.strptime(
                 data['startTime'][0:6], "%H:%M").time()
 
-        # set creatorID to the current user
-        data['creatorID'] = request.creatorID = user_id
+        # set organizerUserId to the current user
+        data['organizerUserId'] = request.organizerUserId = user_id
+        # generate Profile Key based on user ID and Session
+        # ID based on Profile key get Session key from ID
+        p_key = conf.key
+        s_id = Session.allocate_ids(size=1, parent=p_key)[0]
+        s_key = ndb.Key(Session, s_id, parent=p_key)
+        data['key'] = s_key
+        websafeSessionKey = s_key.urlsafe()
+        data['websafeKey'] = websafeSessionKey
+
 
         # create Session and return (modified) SessionForm
         Session(**data).put()
-        return request
+        session = s_key.get()
+        return self.copySessionToForm(session)
 
     @endpoints.method(SessionForm, SessionForm,
                       path='createSession',

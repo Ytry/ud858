@@ -364,26 +364,6 @@ class ConferenceApi(remote.Service):
 
 # - - - Session objects - - - - - - - - - - - - - - - - - - -
 
-    @endpoints.method(CONF_GET_REQUEST, SessionForms,
-                      path='getConferenceSessions/{websafeConferenceKey}',
-                      http_method='GET',
-                      name='getConferenceSessions')
-    def getConferenceSessions(self, request):
-        """Return requested conference sessions (by websafeConferenceKey)."""
-
-        # get conference object from request
-        confwebsafeKey = ndb.Key(urlsafe=request.websafeConferenceKey).get()
-        if not confwebsafeKey:
-            raise endpoints.NotFoundException(
-                'No conference found with key: %s'
-                % request.websafeConferenceKey)
-
-        sessions = Session.query(ancestor=confwebsafeKey).fetch()
-
-        return SessionForms(items=[self.copySessionToForm(session)
-                                   for session in sessions]
-                            )
-
     def copySessionToForm(self, session):
         """Copy relevant fields from Session to SessionForm."""
         sf = SessionForm()
@@ -457,6 +437,28 @@ class ConferenceApi(remote.Service):
     def createSession(self, request):
         """Create new Session."""
         return self.createSessionObject(request)
+
+# - - - Session queries - - - - - - - - - - - - - - - - - - -
+
+    @endpoints.method(CONF_GET_REQUEST, SessionForms,
+                      path='getConferenceSessions/{websafeConferenceKey}',
+                      http_method='GET',
+                      name='getConferenceSessions')
+    def getConferenceSessions(self, request):
+        """Return requested conference sessions (by websafeConferenceKey)."""
+
+        # get conference object from request
+        confwebsafeKey = ndb.Key(urlsafe=request.websafeConferenceKey).get()
+        if not confwebsafeKey:
+            raise endpoints.NotFoundException(
+                'No conference found with key: %s'
+                % request.websafeConferenceKey)
+
+        sessions = Session.query(ancestor=confwebsafeKey.key).fetch()
+
+        return SessionForms(items=[self.copySessionToForm(session)
+                                   for session in sessions]
+                            )
 
     @endpoints.method(SESSION_GET_TYPE_REQUEST, SessionForms,
                       path='getConferenceSessionsByType',

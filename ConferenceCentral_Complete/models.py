@@ -60,30 +60,31 @@ class BooleanMessage(messages.Message):
 
 class Conference(ndb.Model):
     """Conference -- Conference object"""
-    name            = ndb.StringProperty(required=True)
-    description     = ndb.StringProperty()
+    name = ndb.StringProperty(required=True)
+    description = ndb.StringProperty()
     organizerUserId = ndb.StringProperty()
-    topics          = ndb.StringProperty(repeated=True)
-    city            = ndb.StringProperty()
-    startDate       = ndb.DateProperty()
-    month           = ndb.IntegerProperty() # TODO: do we need for indexing like Java?
-    endDate         = ndb.DateProperty()
-    maxAttendees    = ndb.IntegerProperty()
-    seatsAvailable  = ndb.IntegerProperty()
+    topics = ndb.StringProperty(repeated=True)
+    city = ndb.StringProperty()
+    startDate = ndb.DateProperty()
+    month = ndb.IntegerProperty()
+    endDate = ndb.DateProperty()
+    maxAttendees = ndb.IntegerProperty()
+    seatsAvailable = ndb.IntegerProperty()
+
 
 class ConferenceForm(messages.Message):
     """ConferenceForm -- Conference outbound form message"""
-    name            = messages.StringField(1)
-    description     = messages.StringField(2)
+    name = messages.StringField(1)
+    description = messages.StringField(2)
     organizerUserId = messages.StringField(3)
-    topics          = messages.StringField(4, repeated=True)
-    city            = messages.StringField(5)
-    startDate       = messages.StringField(6) #DateTimeField()
-    month           = messages.IntegerField(7)
-    maxAttendees    = messages.IntegerField(8)
-    seatsAvailable  = messages.IntegerField(9)
-    endDate         = messages.StringField(10) #DateTimeField()
-    websafeKey      = messages.StringField(11)
+    topics = messages.StringField(4, repeated=True)
+    city = messages.StringField(5)
+    startDate = messages.StringField(6)  # DateTimeField()
+    month = messages.IntegerField(7)
+    maxAttendees = messages.IntegerField(8)
+    seatsAvailable = messages.IntegerField(9)
+    endDate = messages.StringField(10)  # DateTimeField()
+    websafeKey = messages.StringField(11)
     organizerDisplayName = messages.StringField(12)
 
 
@@ -124,13 +125,14 @@ class ConferenceQueryForms(messages.Message):
     """
     filters = messages.MessageField(ConferenceQueryForm, 1, repeated=True)
 
-class Session(ndb.Model):
-    """Session -- Session object"""
+
+class Session(Conference):
+    """Session -- Session object child of conference"""
     name = ndb.StringProperty(required=True)
     highlights = ndb.StringProperty()
-    speaker = ndb.StringProperty()
+    speaker = ndb.StringProperty(required=True)
     duration = ndb.TimeProperty()
-    typeOfSession = ndb.StringProperty()
+    typeOfSession = ndb.StringProperty(required=True)
     date = ndb.DateProperty()
     startTime = ndb.TimeProperty()
     confwebsafeKey = ndb.StringProperty()

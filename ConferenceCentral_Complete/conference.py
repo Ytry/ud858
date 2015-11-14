@@ -10,6 +10,7 @@ created by wesc on 2014 apr 21
 
 """
 from datetime import datetime
+from datetime import time
 
 import endpoints
 from protorpc import messages
@@ -572,6 +573,29 @@ class ConferenceApi(remote.Service):
 
         return SessionForms(items=[self.copySessionToForm(session)
                                    for session in sessions]
+                            )
+
+    @endpoints.method(message_types.VoidMessage, SessionForms,
+                      path='getNonWorkshopSessions',
+                      http_method='GET',
+                      name='getNonWorkshopSessions')
+    def getNonWorkshopSessions(self, request):
+        """Return session forms for all sessions before 7pm, where
+        the session type is not workshop
+        """
+
+        # fetch a list of sessions after 7pm
+        sessions = Session.query(Session.startTime <= time(hour=19)).fetch()
+
+        session_list = []
+
+        # filter session list for sessions whos type isn't workshop
+        for session in sessions:
+            if session.typeOfSession.lower() != "workshop":
+                session_list.append(session)
+
+        return SessionForms(items=[self.copySessionToForm(session)
+                                   for session in session_list]
                             )
 
 # - - - User Session Whitelist - - - - - - - - - - - - - - -

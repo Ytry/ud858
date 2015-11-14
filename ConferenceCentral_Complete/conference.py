@@ -100,6 +100,11 @@ SESSION_GET_SPEAKER_REQUEST = endpoints.ResourceContainer(
     speaker=messages.StringField(1),
 )
 
+SESSION_GET_CITY_REQUEST = endpoints.ResourceContainer(
+    message_types.VoidMessage,
+    city=messages.StringField(1),
+)
+
 CONF_POST_REQUEST = endpoints.ResourceContainer(
     ConferenceForm,
     websafeConferenceKey=messages.StringField(1),
@@ -488,6 +493,18 @@ class ConferenceApi(remote.Service):
     def getSessionsBySpeaker(self, request):
         """Return a list of sessions containing the requested speaker."""
         sessions = Session.query(Session.speaker == request.speaker).fetch()
+
+        return SessionForms(items=[self.copySessionToForm(session)
+                                   for session in sessions]
+                            )
+
+    @endpoints.method(SESSION_GET_CITY_REQUEST, SessionForms,
+                      path='getSessionsByCity',
+                      http_method='GET',
+                      name='getSessionsByCity')
+    def getSessionsByCity(self, request):
+        """Return session forms for all sessions in requested city"""
+        sessions = Session.query(Session.city == request.city).fetch()
 
         return SessionForms(items=[self.copySessionToForm(session)
                                    for session in sessions]

@@ -100,6 +100,11 @@ SESSION_POST_REQUEST = endpoints.ResourceContainer(
     sessionKey=messages.StringField(1),
 )
 
+SESSION_GET_REQUEST = endpoints.ResourceContainer(
+    message_types.VoidMessage,
+    websafeSessionKey=messages.StringField(1),
+)
+
 SESSION_GET_SPEAKER_REQUEST = endpoints.ResourceContainer(
     message_types.VoidMessage,
     speaker=messages.StringField(1),

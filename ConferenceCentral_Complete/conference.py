@@ -541,7 +541,7 @@ class ConferenceApi(remote.Service):
     @endpoints.method(SESSION_GET_SPEAKER_REQUEST, SessionForms,
                       path='getSessionsBySpeaker',
                       http_method='GET',
-                      name='getConferenceSessionBySpeaker')
+                      name='getSessionsBySpeaker')
     def getSessionsBySpeaker(self, request):
         """Return a list of sessions containing the requested speaker."""
         sessions = Session.query(Session.speaker == request.speaker).fetch()

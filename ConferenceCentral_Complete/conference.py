@@ -487,7 +487,7 @@ class ConferenceApi(remote.Service):
         session = s_key.get()
         return self.copySessionToForm(session)
 
-    @endpoints.method(SessionForm, SessionForm,
+    @endpoints.method(SESSION_POST_REQUEST, SessionForm,
                       path='createSession',
                       http_method='POST',
                       name='createSession')
